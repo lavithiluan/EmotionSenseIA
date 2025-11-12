@@ -1,0 +1,164 @@
+[
+    {
+        "id": "67c636e19dfc88c5",
+        "type": "tab",
+        "label": "Global Solution",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "abc544db6a7f0a96",
+        "type": "serial in",
+        "z": "67c636e19dfc88c5",
+        "name": " Arduino",
+        "serial": "930dc3345253d387",
+        "x": 150,
+        "y": 180,
+        "wires": [
+            [
+                "8a1c001655aa0310"
+            ]
+        ]
+    },
+    {
+        "id": "2b5483983802e4fe",
+        "type": "mqtt out",
+        "z": "67c636e19dfc88c5",
+        "name": "MQTT",
+        "topic": "fiap/gs/humor",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "be788b637fefb2af",
+        "x": 670,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "8a1c001655aa0310",
+        "type": "function",
+        "z": "67c636e19dfc88c5",
+        "name": "function 1",
+        "func": "let str = msg.payload.trim();\n\nlet humor = str.split(\":\")[1];\n\nmsg.payload = {\n    \"humor\": humor,\n    \"timestamp\": new Date().toISOString()\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 180,
+        "wires": [
+            [
+                "2b5483983802e4fe",
+                "1530f111ce7cd775"
+            ]
+        ]
+    },
+    {
+        "id": "1530f111ce7cd775",
+        "type": "debug",
+        "z": "67c636e19dfc88c5",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 580,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "3e3d547fa8fa6d29",
+        "type": "aedes broker",
+        "z": "67c636e19dfc88c5",
+        "name": "",
+        "mqtt_port": 1883,
+        "mqtt_ws_bind": "port",
+        "mqtt_ws_port": "",
+        "mqtt_ws_path": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "persistence_bind": "memory",
+        "dburl": "",
+        "usetls": false,
+        "x": 370,
+        "y": 320,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "930dc3345253d387",
+        "type": "serial-port",
+        "name": "Arduino",
+        "serialport": "COM3",
+        "serialbaud": "9600",
+        "databits": 8,
+        "parity": "none",
+        "stopbits": 1,
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": 10000
+    },
+    {
+        "id": "be788b637fefb2af",
+        "type": "mqtt-broker",
+        "name": "MQTT",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "86aad68a8556217d",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-node-serialport": "2.0.3",
+            "node-red-contrib-aedes": "0.15.0"
+        }
+    }
+]
