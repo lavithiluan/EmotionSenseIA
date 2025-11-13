@@ -59,7 +59,7 @@ O protótipo utiliza o Joystick para coletar o humor e o LED/Buzzer para feedbac
 
 - Execute a classe principal `HumorApiApplication.java` na sua IDE.
 - **Ação:** Mova o Joystick para um humor (ex: TRISTE) e **pressione o botão**.
-- **Resultado no Console Java:** O erro `API key not valid` deve ter desaparecido, e a dica de IA será exibida.
+- **Resultado no Console Java:** E a dica de IA será exibida.
 
 ---
 
