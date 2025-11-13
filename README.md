@@ -1,6 +1,6 @@
 # 🧠 EmotionSense-GenAI: Sistema de Bem-Estar com IA Generativa
 
-Este projeto foi desenvolvido para a **Global Solution 2025/2** (Disciplina: **Arquiteturas Disruptivas: IoT, IoB & IA Generativa**), com foco no tema **"O Futuro do Trabalho"**.
+Este projeto foi desenvolvido para a Disciplina: **Arquiteturas Disruptivas: IoT, IoB & IA Generativa**
 
 O objetivo é demonstrar uma solução que integra **Hardware (Arduino)**, **Node-RED** e **IA Generativa (Google Gemini)** para monitoramento e suporte ao bem-estar do usuário em tempo real.
 
