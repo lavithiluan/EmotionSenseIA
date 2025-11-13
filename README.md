@@ -1,4 +1,4 @@
-# 🧠 EmotionSense-GenAI: Sistema de Bem-Estar com IA Generativa
+# 🧠 EmotionSenseAI: Sistema de Bem-Estar com IA Generativa
 
 Este projeto foi desenvolvido para a Disciplina: **Arquiteturas Disruptivas: IoT, IoB & IA Generativa**
 
