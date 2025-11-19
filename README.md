@@ -69,7 +69,7 @@ O dashboard (embora simples neste projeto) é configurado para exibir os seguint
 
 | Componente | Dados Exibidos | Descrição |
 | :--- | :--- | :--- |
-| **Indicador de Status** | Texto e Cor do LED | Exibe o Humor atual (`ANSIOSO` em vermelho, `FELIZ` em verde, etc.). |
+| **Indicador de Status** | Texto e Cor do LED | Exibe o Humor atual (`Raiva` em vermelho, `FELIZ` em verde, etc.). |
 | **Dica de IA** | Texto gerado pelo Gemini | Exibe a mensagem de suporte em tempo real. |
 
 ---
