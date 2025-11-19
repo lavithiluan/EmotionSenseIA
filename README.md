@@ -40,7 +40,7 @@ O protótipo utiliza o Joystick para coletar o humor e o LED/Buzzer para feedbac
 ### Parte 1: Preparação e Hardware
 
 1.  **Arduino:** Carregue o código `totem_humor.ino` na sua placa.
-2.  **Nuvem/API:** Obtenha suas chaves e ative a **Generative Language API** no Google Cloud.
+2.  **Nuvem/API:** Obtenha suas chaves no site https://aistudio.google.com e ative a **Generative Language API** no Google Cloud.
 3.  **Configuração Java:** No arquivo `humor-api/src/main/resources/application.properties`, configure:
     ```properties
     spring.ai.google.genai.project-id=SEU_PROJECT_ID_AQUI
