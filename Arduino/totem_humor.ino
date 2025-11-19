@@ -25,7 +25,7 @@ void setup() {
 
   setCorLED(255, 255, 255);
   delay(300);
-  setCorLED(0, 0, 0); 
+  setCorLED(0, 0, 0);
 }
 
 
@@ -34,40 +34,41 @@ void loop() {
   // 1. LER OS SENSORES
   int valorX = analogRead(PIN_JOY_X);
   int valorY = analogRead(PIN_JOY_Y);
-  int valorSW = digitalRead(PIN_JOY_SW); 
+  int valorSW = digitalRead(PIN_JOY_SW);
 
   // 2. INTERPRETAR O HUMOR E ATUALIZAR O LED
+
   // Cima (Feliz)
-  if (valorY > 800) { 
+  if (valorY > 800) {
     humorAtual = 1;
     setCorLED(0, 255, 0); // Verde
-  } 
+  }
   // Baixo (Triste)
-  else if (valorY < 200) { 
+  else if (valorY < 200) {
     humorAtual = 2;
     setCorLED(0, 0, 255); // Azul
   }
   // Direita (Ansioso)
-  else if (valorX > 800) { 
+  else if (valorX > 800) {
     humorAtual = 3;
-    setCorLED(255, 0, 0); // Vermelho
+    setCorLED(255, 0, 255); // Roxo (Vermelho + Azul)
   }
-  // Esquerda (Normal)
-  else if (valorX < 200) { 
+  // Esquerda (Raiva)
+  else if (valorX < 200) {
     humorAtual = 4;
-    setCorLED(255, 255, 0); // Amarelo
+    setCorLED(255, 0, 0); // Vermelho Puro
   }
   else {
     humorAtual = 0;
-    setCorLED(0, 0, 0); 
+    setCorLED(0, 0, 0); // Apagado (Centro)
   }
 
   // 3. VERIFICAR SE O BOTÃO FOI PRESSIONADO
   if (valorSW == LOW && humorAtual != 0) {
-    
+
     // Toca o Bip de confirmação
-    tone(PIN_BUZZER, 1000, 100); 
-    
+    tone(PIN_BUZZER, 1000, 100);
+
     // Envia o humor para o PC via USB
     if (humorAtual == 1) {
       Serial.println("HUMOR:FELIZ");
@@ -76,7 +77,7 @@ void loop() {
     } else if (humorAtual == 3) {
       Serial.println("HUMOR:ANSIOSO");
     } else if (humorAtual == 4) {
-      Serial.println("HUMOR:NORMAL");
+      Serial.println("HUMOR:RAIVA");
     }
     
     piscarLED();
@@ -100,8 +101,8 @@ void piscarLED() {
   delay(100);
   setCorLED(255, 255, 255); // Branco
   delay(100);
-  setCorLED(0, 0, 0); // Desliga
+  setCorLED(0, 0, 0);
   delay(100);
-  setCorLED(255, 255, 255); // Branco
+  setCorLED(255, 255, 255);
   delay(100);
 }

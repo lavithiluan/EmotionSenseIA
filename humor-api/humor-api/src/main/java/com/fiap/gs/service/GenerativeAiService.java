@@ -1,6 +1,8 @@
 package com.fiap.gs.service;
 
+import com.fiap.gs.config.MqttPublisher;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +10,9 @@ import org.springframework.stereotype.Service;
 public class GenerativeAiService {
 
     private final ChatClient chatClient;
+
+    @Autowired
+    private MqttPublisher mqttPublisher;
 
     public GenerativeAiService(ChatClient.Builder chatClientBuilder) {
         this.chatClient = chatClientBuilder.build();
@@ -31,7 +36,6 @@ public class GenerativeAiService {
                 """,
                 humor
         );
-        // ========================================================================
 
         try {
             String respostaDaIA = this.chatClient.prompt()
@@ -41,8 +45,16 @@ public class GenerativeAiService {
 
             System.out.println("[IA - DICA GERADA]: " + respostaDaIA);
 
+            if (mqttPublisher != null) {
+                mqttPublisher.sendToMqtt(respostaDaIA, "fiap/gs/dica");
+                System.out.println("[MQTT] Dica enviada com sucesso para o tópico: fiap/gs/dica");
+            } else {
+                System.err.println("[ERRO CRÍTICO] MqttPublisher é nulo! Verifique a injeção de dependência.");
+            }
+
         } catch (Exception e) {
-            System.err.println("Erro ao chamar a API do Gemini: " + e.getMessage());
+            System.err.println("Erro ao processar IA ou enviar MQTT: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 }

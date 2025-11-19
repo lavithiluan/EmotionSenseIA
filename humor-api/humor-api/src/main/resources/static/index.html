@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
+    <title>EmotionSense AI - Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/paho-mqtt/1.0.1/mqttws31.min.js" type="text/javascript"></script>
+
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --card-color: #ffffff;
+            --text-color: #333;
+            --accent-color: #2196F3;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            transition: background-color 0.5s ease; /* Transição suave de cor */
+        }
+
+        .card {
+            background: var(--card-color);
+            border-radius: 20px;
+            padding: 40px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transition: all 0.5s ease;
+        }
+
+        h1 { margin-bottom: 5px; font-size: 1.8rem; }
+
+        /* Status da Conexão */
+        #status { font-size: 0.85rem; margin-bottom: 30px; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; }
+
+        /* Ícone da Emoção (Emoji Gigante) */
+        #emoji-display {
+            font-size: 5rem;
+            margin: 20px 0;
+            display: block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Texto da Emoção Selecionada */
+        #emotion-label {
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: bold;
+            color: #888;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+
+        /* Caixa da Dica */
+        .dica-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 2px dashed var(--accent-color);
+            padding: 25px;
+            border-radius: 15px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        #dica {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .waiting { color: #aaa !important; font-style: italic; }
+
+        /* Animação de Flutuar */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* --- CLASSES DE CORES DINÂMICAS --- */
+
+        /* Feliz (Amarelo/Verde) */
+        body.feliz { --bg-color: #fff9c4; --accent-color: #fbc02d; }
+        body.feliz .card { border-top: 10px solid #fbc02d; }
+
+        /* Triste (Azul) */
+        body.triste { --bg-color: #e3f2fd; --accent-color: #2196f3; }
+        body.triste .card { border-top: 10px solid #2196f3; }
+
+        /* Ansioso (Roxo/Magenta) */
+        body.ansioso { --bg-color: #f3e5f5; --accent-color: #9c27b0; }
+        body.ansioso .card { border-top: 10px solid #9c27b0; }
+
+        /* Raiva (Vermelho) - Substituiu o Normal */
+        body.raiva { --bg-color: #ffcdd2; --accent-color: #d32f2f; }
+        body.raiva .card { border-top: 10px solid #d32f2f; }
+
+        /* Default / Inicial */
+        body.normal { --bg-color: #e0e0e0; --accent-color: #9e9e9e; }
+        body.normal .card { border-top: 10px solid #9e9e9e; }
+
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h1>🧠 EmotionSense AI</h1>
+    <div id="status"><span class="dot" style="background-color: red;"></span> Desconectado</div>
+
+    <div id="emoji-display">😶</div>
+    <div id="emotion-label">AGUARDANDO LEITURA...</div>
+
+    <p style="font-size: 0.9rem; color: #666;">Dica de Bem-Estar Sugerida:</p>
+    <div class="dica-container">
+        <span id="dica" class="waiting">Mova o joystick para começar...</span>
+    </div>
+</div>
+
+<script>
+    const broker = "broker.hivemq.com";
+    const port = 8000;
+    const topicHumor = "fiap/gs/humor";
+    const topicDica = "fiap/gs/dica";
+    const clientID = "web_client_" + new Date().getTime();
+
+    const client = new Paho.MQTT.Client(broker, port, clientID);
+
+    const emotionsMap = {
+        "FELIZ":   { emoji: "😄", class: "feliz", text: "Você está Feliz!" },
+        "TRISTE":  { emoji: "😢", class: "triste", text: "Sentindo-se Triste" },
+        "ANSIOSO": { emoji: "😰", class: "ansioso", text: "Sentindo Ansiedade" },
+        "RAIVA":   { emoji: "😡", class: "raiva", text: "Sentindo Raiva" },
+        "NORMAL":  { emoji: "😐", class: "normal", text: "Estado Normal" }
+    };
+
+    client.onConnectionLost = function(responseObject) {
+        const statusDiv = document.getElementById("status");
+        statusDiv.innerHTML = '<span class="dot" style="background-color: red;"></span> Desconectado';
+        console.log("Conexão perdida: " + responseObject.errorMessage);
+    };
+
+    client.onMessageArrived = function(message) {
+        console.log("Tópico: " + message.destinationName + " | Msg: " + message.payloadString);
+
+        if (message.destinationName === topicHumor) {
+            try {
+                const payload = JSON.parse(message.payloadString);
+                atualizarInterfaceVisual(payload.humor);
+            } catch (e) {
+                console.error("Erro ao ler JSON do humor", e);
+            }
+        }
+
+        else if (message.destinationName === topicDica) {
+            const dicaElement = document.getElementById("dica");
+            dicaElement.innerText = message.payloadString;
+            dicaElement.classList.remove("waiting");
+            const container = document.querySelector('.dica-container');
+            container.style.transform = "scale(1.05)";
+            setTimeout(() => container.style.transform = "scale(1)", 200);
+        }
+    };
+
+    function atualizarInterfaceVisual(humorRaw) {
+        const humor = humorRaw.trim().toUpperCase();
+        const config = emotionsMap[humor] || emotionsMap["NORMAL"];
+        document.getElementById("emoji-display").innerText = config.emoji;
+        document.getElementById("emotion-label").innerText = config.text;
+        document.body.className = config.class;
+        const dicaElement = document.getElementById("dica");
+        dicaElement.innerText = "🤔 A IA está pensando em uma dica para você...";
+        dicaElement.classList.add("waiting");
+    }
+
+    client.connect({
+        onSuccess: function() {
+            console.log("Conectado!");
+            const statusDiv = document.getElementById("status");
+            statusDiv.innerHTML = '<span class="dot" style="background-color: #00e676;"></span> Sistema Online e Integrado';
+            statusDiv.style.color = "#00e676";
+
+            client.subscribe(topicHumor);
+            client.subscribe(topicDica);
+        },
+        useSSL: false
+    });
+</script>
+</body>
+</html>
