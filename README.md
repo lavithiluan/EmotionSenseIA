@@ -48,7 +48,9 @@ O protótipo utiliza o Joystick para coletar o humor e o LED/Buzzer para feedbac
     mqtt.broker.url=tcp://broker.hivemq.com:1883
     mqtt.topic=fiap/gs/humor
     ```
-     ```Minhas chaves API e Project ID
+
+    Minhas chaves API e Project ID
+     ```
     spring.ai.google.genai.project-id=gen-lang-client-0558133533
     spring.ai.google.genai.api-key=AIzaSyAtl-CKl8OQFbkZ6VJXxhn8fFwhC_aBZeI
     mqtt.broker.url=tcp://broker.hivemq.com:1883
