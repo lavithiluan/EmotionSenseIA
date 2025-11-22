@@ -77,31 +77,6 @@
         "wires": []
     },
     {
-        "id": "3e3d547fa8fa6d29",
-        "type": "aedes broker",
-        "z": "67c636e19dfc88c5",
-        "name": "",
-        "mqtt_port": 1883,
-        "mqtt_ws_bind": "port",
-        "mqtt_ws_port": "",
-        "mqtt_ws_path": "",
-        "cert": "",
-        "key": "",
-        "ca": "",
-        "certname": "",
-        "keyname": "",
-        "caname": "",
-        "persistence_bind": "memory",
-        "dburl": "",
-        "usetls": false,
-        "x": 370,
-        "y": 320,
-        "wires": [
-            [],
-            []
-        ]
-    },
-    {
         "id": "930dc3345253d387",
         "type": "serial-port",
         "name": "Arduino",
@@ -153,12 +128,11 @@
         "sessionExpiry": ""
     },
     {
-        "id": "86aad68a8556217d",
+        "id": "db24d81d64334709",
         "type": "global-config",
         "env": [],
         "modules": {
-            "node-red-node-serialport": "2.0.3",
-            "node-red-contrib-aedes": "0.15.0"
+            "node-red-node-serialport": "2.0.3"
         }
     }
 ]
