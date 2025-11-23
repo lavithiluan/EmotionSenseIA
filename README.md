@@ -1,5 +1,7 @@
 # 🧠 EmotionSenseAI: Sistema de Bem-Estar com IA Generativa
 
+**🎥 Vídeo de Apresentação Final:** [EmotionSense IA - Global Solution](https://youtu.be/1tlHVf9RrSo)
+
 Este projeto foi desenvolvido para a Disciplina: **Arquiteturas Disruptivas: IoT, IoB & IA Generativa**
 
 O objetivo é demonstrar uma solução que integra **Hardware (Arduino)**, **Node-RED** e **IA Generativa (Google Gemini)** para monitoramento e suporte ao bem-estar do usuário em tempo real.
